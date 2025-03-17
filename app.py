@@ -1,3 +1,15 @@
+import streamlit as st
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+import time
+from bs4 import BeautifulSoup
+
+# ------------- Settings for Pages -----------
+st.set_page_config(layout="wide")
+
+# Keep text only
 def get_website_content(url):
     driver = None
     try:
@@ -20,3 +32,28 @@ def get_website_content(url):
     finally:
         if driver is not None: driver.quit()
     return None
+
+
+
+
+# ---------------- Page & UI/UX Components ------------------------
+def main_sidebar():
+    # 1.Vertical Menu
+    st.header("Running Selenium on Streamlit Cloud")
+    site_extraction_page()
+
+
+def site_extraction_page():
+    SAMPLE_URL = "https://spectrum.ieee.org/3d-printed-rocket"
+    url = st.text_input(label="URL", placeholder="https://example.com", value=SAMPLE_URL)
+
+    clicked = st.button("Load Page Content",type="primary")
+    if clicked:
+        with st.container(border=True):
+            with st.spinner("Loading page website..."):
+                content = get_website_content(url)
+                st.write(content)
+
+
+if __name__ == "__main__":
+    main_sidebar()
